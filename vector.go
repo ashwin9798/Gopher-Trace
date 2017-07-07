@@ -13,7 +13,7 @@ func (v Vector) Length() float64 {
 }
 
 func (v Vector) Dot(o Vector) float64 {
-    return v.X*o*X + v.Y*o.Y + v.Z*o.Z
+    return v.X*o.X + v.Y*o.Y + v.Z*o.Z
 }
 
 func (v Vector) Add(o Vector) Vector {
