@@ -3,6 +3,8 @@ package main
 import (
   "fmt"
   "os"
+
+  obj "objects"
 )
 
 func check(e error, s string) {
@@ -27,10 +29,10 @@ func main() {
 
     check(err, "Error writting to file: %v\n")
 
-    lowerLeft := Vector{-2.0, -1.0, -1.0}
-	  horizontal := Vector{4.0, 0.0, 0.0}
-	  vertical := Vector{0.0, 2.0, 0.0}
-	  origin := Vector{0.0, 0.0, 0.0}
+    lowerLeft := obj.Vector{-2.0, -1.0, -1.0}
+	  horizontal := obj.Vector{4.0, 0.0, 0.0}
+	  vertical := obj.Vector{0.0, 2.0, 0.0}
+	  origin := obj.Vector{0.0, 0.0, 0.0}
 
     //loop through all the pixels from top left to bottom right
     //write rgb values for each
@@ -44,7 +46,7 @@ func main() {
           // direction = lowerLeft + (u * horizontal) + (v * vertical)
           direction := lowerLeft.Add(position)
 
-          rgb := Ray{origin, direction}.Color()
+          rgb := obj.Ray{origin, direction}.Color()
 
           // get intensity of colors
           ir := int(color * rgb.X)
