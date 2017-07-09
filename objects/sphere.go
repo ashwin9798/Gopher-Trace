@@ -9,7 +9,7 @@ type Sphere struct {
     Radius float64
 }
 
-func (s *Sphere) Hit(r *Ray, tmin float64, tmax float64)(bool, HitRecord) {
+func (s *Sphere) Hit(r *Ray, tMin float64, tMax float64)(bool, HitRecord) {
     oc := r.Origin.Subtract(s.Center)
     a := r.Direction.Dot(r.Direction)
     b := 2.0 * oc.Dot(r.Direction)
@@ -18,8 +18,21 @@ func (s *Sphere) Hit(r *Ray, tmin float64, tmax float64)(bool, HitRecord) {
 
     record := HitRecord{}
 
-    //TBC
     if discriminant > 0.0 {
-        t := (-b - math.Sqrt(b*b-a*c))
+        temp := (-b - math.Sqrt(b*b-a*c))
+        if temp < tMax && temp > tMin {
+            record.T = temp
+            record.P = r.Point(temp)
+            record.normal = (record.P - Center)
+            return true
+        }
+        temp = (-b + math.Sqrt(b*b-a*c))  //other root
+        if temp < tMax && temp > tMin {
+            record.T = temp
+            record.P = r.Point(temp)
+            record.normal = (record.P - Center)/Radius
+            return true
+        }
     }
+    return false
 }
