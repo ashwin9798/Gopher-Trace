@@ -36,7 +36,7 @@ func main() {
 
     //loop through all the pixels from top left to bottom right
     //write rgb values for each
-    for j:= dimensionsY-1; j>=0; j-- {
+    for j := dimensionsY-1; j>=0; j-- {
       for i := 0; i<dimensionsX; i++ {
           u := float64(i) / float64(dimensionsX)
           v := float64(j) / float64(dimensionsY)
