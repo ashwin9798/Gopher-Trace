@@ -12,13 +12,7 @@ func (r Ray) Point(t float64) Vector {
 
 //solving the equations that tell if ray hits sphere
 func (r Ray) HitSphere(s Sphere) bool {
-    oc := r.Origin.Subtract(s.Center)
-    a := r.Direction.Dot(r.Direction)
-    b := 2.0 * oc.Dot(r.Direction)
-    c := oc.Dot(oc) - s.Radius*s.Radius
-    discriminant := b*b - 4*a*c
-
-    return discriminant > 0
+    //TBC
 }
 
 func (r Ray) Color() Vector {
