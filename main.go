@@ -14,11 +14,30 @@ func check(e error, s string) {
     }
 }
 
-func main() {
-    dimensionsX := 400
-    dimensionsY := 200
 
-    const color = 255.99
+const (
+	dimensionsX = 400 // size of x
+	dimensionsY = 200 // size of y
+	numSamples = 100 // number of samples for aa
+	col  = 255.99
+)
+
+func gradient(v *obj.Vector) obj.Vector {
+    t := 0.5 * (v.Y + 1.0)
+    // linear blend: blended_value = (1 - t) * white + t * blue
+    return white.MultiplyScalar(1.0 - t).Add(blue.MultiplyScalar(t))
+}
+
+func color(r *obj.Ray, h obj.Hitable) obj.Vector {
+    hit, record := h.Hit(r, 0.0, math.MaxFloat64)
+
+    if hit {
+        return record.Normal.AddScalar(1.0).MultiplyScalar(0.5)
+    }
+    unitDirection := r.Direction.Normalize()
+}
+
+func main() {
 
     f, err := os.Create("out.ppm")
     defer f.Close()
