@@ -10,6 +10,7 @@ func NewCamera() *Camera {
     c.horizontal = Vector{4.0, 0.0, 0.0}
     c.vertical = Vector{0.0, 2.0, 0.0}
     c.origin = Vector{0.0, 0.0, 0.0}
+    return c
 }
 
 func (c *Camera) RayAt(u float64, v float64) Ray {

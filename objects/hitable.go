@@ -2,9 +2,9 @@ package objects
 
 type HitRecord struct {
     T float64
-    P, normal Vector
+    P, Normal Vector
 }
 
 type Hitable interface {
-    Hit(r *ray, tMin float64, tMax float64)(bool, HitRecord)
+    Hit(r *Ray, tMin float64, tMax float64)(bool, HitRecord)
 }

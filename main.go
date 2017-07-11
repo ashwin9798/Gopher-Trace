@@ -3,6 +3,8 @@ package main
 import (
   "fmt"
   "os"
+  "math"
+  "math/rand"
 
   obj "objects"
 )
@@ -22,6 +24,15 @@ const (
 	col  = 255.99
 )
 
+var (
+	  white = obj.Vector{1.0, 1.0, 1.0}
+	  blue  = obj.Vector{0.5, 0.7, 1.0}
+	  camera = obj.NewCamera()
+	  sphere = obj.Sphere{obj.Vector{0, 0, -1}, 0.5}
+	  floor  = obj.Sphere{obj.Vector{0, -100.5, -1}, 100}
+    world = obj.World{[]obj.Hitable{&sphere, &floor}}
+)
+
 func gradient(v *obj.Vector) obj.Vector {
     t := 0.5 * (v.Y + 1.0)
     // linear blend: blended_value = (1 - t) * white + t * blue
@@ -35,6 +46,7 @@ func color(r *obj.Ray, h obj.Hitable) obj.Vector {
         return record.Normal.AddScalar(1.0).MultiplyScalar(0.5)
     }
     unitDirection := r.Direction.Normalize()
+    return gradient(&unitDirection)
 }
 
 func main() {
@@ -48,32 +60,27 @@ func main() {
 
     check(err, "Error writting to file: %v\n")
 
-    lowerLeft := obj.Vector{-2.0, -1.0, -1.0}
-	  horizontal := obj.Vector{4.0, 0.0, 0.0}
-	  vertical := obj.Vector{0.0, 2.0, 0.0}
-	  origin := obj.Vector{0.0, 0.0, 0.0}
-
     //loop through all the pixels from top left to bottom right
     //write rgb values for each
     for j := dimensionsY-1; j>=0; j-- {
       for i := 0; i<dimensionsX; i++ {
-          u := float64(i) / float64(dimensionsX)
-          v := float64(j) / float64(dimensionsY)
+        rgb := obj.Vector{}
 
-          position := horizontal.MultiplyScalar(u).Add(vertical.MultiplyScalar(v))
-
-          // direction = lowerLeft + (u * horizontal) + (v * vertical)
-          direction := lowerLeft.Add(position)
-
-          rgb := obj.Ray{origin, direction}.Color()
-
+          for s := 0; s < numSamples; s++ {
+              u := (float64(i)+ rand.Float64())/ float64(dimensionsX)
+              v := (float64(j) + rand.Float64())/ float64(dimensionsY)
+              r := camera.RayAt(u,v)
+              color := color(&r, &world)
+				      rgb = rgb.Add(color)
+          }
+          // average
+			    rgb = rgb.DivideScalar(float64(numSamples))
           // get intensity of colors
-          ir := int(color * rgb.X)
-          ig := int(color * rgb.Y)
-          ib := int(color * rgb.Z)
+          ir := int(col * rgb.X)
+          ig := int(col * rgb.Y)
+          ib := int(col * rgb.Z)
 
           _, err = fmt.Fprintf(f, "%d %d %d\n", ir, ig, ib)
-
           check(err, "Error writing to file: %v\n")
       }
     }
