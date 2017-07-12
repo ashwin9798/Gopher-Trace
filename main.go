@@ -33,7 +33,8 @@ var (
     world = obj.World{[]obj.Hitable{&sphere, &floor}}
 )
 
-func gradient(v *obj.Vector) obj.Vector {
+func gradient(r obj.Ray) obj.Vector {
+    v := r.Direction.Normalize()
     t := 0.5 * (v.Y + 1.0)
     // linear blend: blended_value = (1 - t) * white + t * blue
     return white.MultiplyScalar(1.0 - t).Add(blue.MultiplyScalar(t))
@@ -50,7 +51,7 @@ func color(r obj.Ray, world obj.Hitable, depth int) obj.Vector {
           return record.Material.Color().Multiply(newColor)
         }
       }
-      return p.Vector{}
+      return obj.Vector{}
     }
     return gradient(r)
 }

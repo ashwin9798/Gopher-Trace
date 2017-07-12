@@ -41,6 +41,14 @@ func (v Vector) Subtract(o Vector) Vector {
 	return Vector{v.X - o.X, v.Y - o.Y, v.Z - o.Z}
 }
 
+func (v Vector) Divide(o Vector) Vector {
+	return Vector{v.X / o.X, v.Y / o.Y, v.Z / o.Z}
+}
+
+func (v Vector) Multiply(o Vector) Vector {
+	return Vector{v.X * o.X, v.Y * o.Y, v.Z * o.Z}
+}
+
 func (v Vector) AddScalar(a float64) Vector {
 	return Vector{v.X + a, v.Y + a, v.Z + a}
 }
