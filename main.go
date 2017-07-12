@@ -39,14 +39,20 @@ func gradient(v *obj.Vector) obj.Vector {
     return white.MultiplyScalar(1.0 - t).Add(blue.MultiplyScalar(t))
 }
 
-func color(r *obj.Ray, h obj.Hitable) obj.Vector {
-    hit, record := h.Hit(r, 0.0, math.MaxFloat64)
+func color(r obj.Ray, world obj.Hitable, depth int) obj.Vector {
+    hit, record := world.Hit(r, 0.001, math.MaxFloat64)
 
     if hit {
-        return record.Normal.AddScalar(1.0).MultiplyScalar(0.5)
+      if depth < 50 {
+        bounced, bouncedRay := record.Bounce(r, record)
+        if bounced {
+          newColor := color(bouncedRay, world, depth+1)
+          return record.Material.Color().Multiply(newColor)
+        }
+      }
+      return p.Vector{}
     }
-    unitDirection := r.Direction.Normalize()
-    return gradient(&unitDirection)
+    return gradient(r)
 }
 
 func main() {
