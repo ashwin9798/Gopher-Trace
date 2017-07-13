@@ -7,6 +7,7 @@ import (
 type Sphere struct {
     Center Vector
     Radius float64
+    Material
 }
 
 func (s *Sphere) Hit(r Ray, tMin float64, tMax float64)(bool, Hit) {
@@ -16,7 +17,7 @@ func (s *Sphere) Hit(r Ray, tMin float64, tMax float64)(bool, Hit) {
     c := oc.Dot(oc) - s.Radius*s.Radius
     discriminant := b*b - 4*a*c
 
-    record := Hit{Material: s.material}
+    record := Hit{Material: s.Material}
 
     if discriminant > 0.0 {
         temp := (-b - math.Sqrt(b*b-a*c))

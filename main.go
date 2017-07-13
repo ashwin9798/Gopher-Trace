@@ -28,8 +28,8 @@ var (
 	  white = obj.Vector{1.0, 1.0, 1.0}
 	  blue  = obj.Vector{0.5, 0.7, 1.0}
 	  camera = obj.NewCamera()
-	  sphere = obj.Sphere{obj.Vector{0, 0, -1}, 0.5}
-	  floor  = obj.Sphere{obj.Vector{0, -100.5, -1}, 100}
+	  sphere = obj.Sphere{obj.Vector{0, 0, -1}, 0.5, obj.Lambertian{obj.Vector{0.8,0.3,0.3}}}
+	  floor  = obj.Sphere{obj.Vector{0, -100.5, -1}, 100, obj.Lambertian{obj.Vector{0.8,0.8,0.0}}}
     world = obj.World{[]obj.Hitable{&sphere, &floor}}
 )
 
@@ -77,15 +77,15 @@ func main() {
               u := (float64(i)+ rand.Float64())/ float64(dimensionsX)
               v := (float64(j) + rand.Float64())/ float64(dimensionsY)
               r := camera.RayAt(u,v)
-              color := color(&r, &world)
+              color := color(r, &world, 0)
 				      rgb = rgb.Add(color)
           }
           // average
 			    rgb = rgb.DivideScalar(float64(numSamples))
           // get intensity of colors
-          ir := int(col * rgb.X)
-          ig := int(col * rgb.Y)
-          ib := int(col * rgb.Z)
+          ir := int(col * math.Sqrt(rgb.X))
+          ig := int(col * math.Sqrt(rgb.Y))
+          ib := int(col * math.Sqrt(rgb.Z))
 
           _, err = fmt.Fprintf(f, "%d %d %d\n", ir, ig, ib)
           check(err, "Error writing to file: %v\n")
