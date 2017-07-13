@@ -20,7 +20,7 @@ The file returned is a .ppm file, which can be viewed using ToyViewer for OS X, 
 # Progression of image
 
 1. Rendering metals
-![alt text](https://raw.githubusercontent.com/ashwin9798/Gopher-Trace/master/currentImage.png)
+![alt text](https://raw.githubusercontent.com/ashwin9798/Gopher-Trace/master/images/currentImage.png)
 
 2. Fuzz property added to metals
-![alt text](https://raw.githubusercontent.com/ashwin9798/Gopher-Trace/master/image2.png)
+![alt text](https://raw.githubusercontent.com/ashwin9798/Gopher-Trace/master/images/image2.png)
