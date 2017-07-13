@@ -16,3 +16,7 @@ Ray tracing is a technique in computer graphics for generating an image by traci
 `<go run *.go>`
 
 The file returned is a .ppm file, which can be viewed using ToyViewer for OS X, or some other software on other systems (haven't looked into it).
+
+# What it looks like right now
+
+![alt text](https://raw.githubusercontent.com/ashwin9798/Gopher-Trace/master/currentImage.png)
