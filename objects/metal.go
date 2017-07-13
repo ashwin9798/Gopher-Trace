@@ -2,11 +2,12 @@ package objects
 
 type Metal struct {
     C Vector
+    Fuzz float64
 }
 
 func (m Metal) Bounce(input Ray, hit Hit)(bool, Ray) {
     directionReflected := reflect(input.Direction, hit.Normal)
-    scatteredRay := Ray{hit.Point, directionReflected}
+    scatteredRay := Ray{hit.Point, directionReflected.Add(VectorInUnitSphere().MultiplyScalar(m.Fuzz))}
     bounced := directionReflected.Dot(hit.Normal) > 0
     return bounced, scatteredRay
 }

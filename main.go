@@ -30,8 +30,8 @@ var (
 	  camera = obj.NewCamera()
 	  sphere = obj.Sphere{obj.Vector{0, 0, -1}, 0.5, obj.Lambertian{obj.Vector{0.8,0.3,0.3}}}
 	  floor  = obj.Sphere{obj.Vector{0, -100.5, -1}, 100, obj.Lambertian{obj.Vector{0.8,0.8,0.0}}}
-    left   = obj.Sphere{obj.Vector{1, 0, -1}, 0.5, obj.Metal{obj.Vector{0.8, 0.6, 0.2}}}
- 	  right  = obj.Sphere{obj.Vector{-1, 0, -1}, 0.5, obj.Metal{obj.Vector{0.8, 0.8, 0.8}}}
+    left   = obj.Sphere{obj.Vector{1, 0, -1}, 0.5, obj.Metal{obj.Vector{0.8, 0.6, 0.2},0.0}}
+ 	  right  = obj.Sphere{obj.Vector{-1, 0, -1}, 0.5, obj.Metal{obj.Vector{0.8, 0.8, 0.8},0.4}}
     world = obj.World{[]obj.Hitable{&sphere, &floor, &left, &right}}
 )
 
