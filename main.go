@@ -18,10 +18,10 @@ func check(e error, s string) {
 
 
 const (
-	dimensionsX = 400 // size of x
-	dimensionsY = 200 // size of y
-	numSamples = 100 // number of samples for aa
-	col  = 255.99
+	 dimensionsX = 400 // size of x
+	 dimensionsY = 200 // size of y
+	 numSamples = 100 // number of samples for aa
+	 col  = 255.99
 )
 
 var (
@@ -30,7 +30,9 @@ var (
 	  camera = obj.NewCamera()
 	  sphere = obj.Sphere{obj.Vector{0, 0, -1}, 0.5, obj.Lambertian{obj.Vector{0.8,0.3,0.3}}}
 	  floor  = obj.Sphere{obj.Vector{0, -100.5, -1}, 100, obj.Lambertian{obj.Vector{0.8,0.8,0.0}}}
-    world = obj.World{[]obj.Hitable{&sphere, &floor}}
+    left   = obj.Sphere{obj.Vector{1, 0, -1}, 0.5, obj.Metal{obj.Vector{0.8, 0.6, 0.2}}}
+ 	  right  = obj.Sphere{obj.Vector{-1, 0, -1}, 0.5, obj.Metal{obj.Vector{0.8, 0.8, 0.8}}}
+    world = obj.World{[]obj.Hitable{&sphere, &floor, &left, &right}}
 )
 
 func gradient(r obj.Ray) obj.Vector {
@@ -71,7 +73,7 @@ func main() {
     //write rgb values for each
     for j := dimensionsY-1; j>=0; j-- {
       for i := 0; i<dimensionsX; i++ {
-        rgb := obj.Vector{}
+          rgb := obj.Vector{}
 
           for s := 0; s < numSamples; s++ {
               u := (float64(i)+ rand.Float64())/ float64(dimensionsX)

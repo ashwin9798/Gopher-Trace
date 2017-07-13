@@ -16,7 +16,7 @@ func VectorInUnitSphere() Vector {
       r := Vector{rand.Float64(), rand.Float64(), rand.Float64()}
       p := r.MultiplyScalar(2.0).Subtract(UnitVector)
       if p.SquaredLength() >= 1.0 {
-        return p
+          return p
       }
     }
 }
