@@ -27,4 +27,4 @@ The file returned is a .ppm file, which can be viewed using ToyViewer for OS X, 
 
 3. Dielectric/glass sphere
 
-![alt text](https://raw.githubusercontent.com/ashwin9798/Gopher-Trace/master/images/image2.png)
+![alt text](https://raw.githubusercontent.com/ashwin9798/Gopher-Trace/master/images/image3.png)
