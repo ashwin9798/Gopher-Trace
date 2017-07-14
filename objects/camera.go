@@ -1,32 +1,35 @@
 package objects
 
+import (
+    "math"
+)
+
 type Camera struct {
     lowerLeft, horizontal, vertical, origin Vector
 }
 
-func NewCamera() Camera {
+func NewCamera(lookFrom, lookAt, vUp Vector, vfov, aspect float64) Camera {
     c := Camera{}
-    c.lowerLeft = Vector{-2.0, -1.0, -1.0}
-    c.horizontal = Vector{4.0, 0.0, 0.0}
-    c.vertical = Vector{0.0, 2.0, 0.0}
-    c.origin = Vector{0.0, 0.0, 0.0}
-    return c
+
+    theta := vfov * math.Pi/180
+    halfHeight := math.Tan(theta/2)
+    halfWidth := aspect * halfHeight
+    w := lookFrom.Subtract(lookAt).Normalize()
+    u := vUp.Cross(w).Normalize()
+    v := w.Cross(u)
+
+    c.origin = lookFrom
+    c.lowerLeft =  c.origin.Subtract(u.MultiplyScalar(halfWidth)).Subtract(v.MultiplyScalar(halfHeight)).Subtract(w)
+	  c.horizontal = u.MultiplyScalar(2 * halfWidth)
+	  c.vertical = v.MultiplyScalar(2 * halfHeight)
+
+	   return c
 }
 
 func (c *Camera) RayAt(u float64, v float64) Ray {
-	   position := c.position(u, v)
-	   direction := c.direction(position)
+    horizontal := c.horizontal.MultiplyScalar(u)
+    vertical := c.vertical.MultiplyScalar(v)
 
-	   return Ray{c.origin, direction}
-}
-
-func (c *Camera) position(u float64, v float64) Vector {
-	   horizontal := c.horizontal.MultiplyScalar(u)
-	   vertical := c.vertical.MultiplyScalar(v)
-
-	   return horizontal.Add(vertical)
-}
-
-func (c *Camera) direction(position Vector) Vector {
-	   return c.lowerLeft.Add(position)
+    direction := c.lowerLeft.Add(horizontal).Add(vertical).Subtract(c.origin)
+    return Ray{c.origin, direction}
 }

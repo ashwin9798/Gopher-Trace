@@ -50,12 +50,12 @@ func createFile() *os.File {
 }
 
 func writeFile(f *os.File, rgb obj.Color) {
-  ir := int(col * math.Sqrt(rgb.R))
-  ig := int(col * math.Sqrt(rgb.G))
-  ib := int(col * math.Sqrt(rgb.B))
+    ir := int(col * math.Sqrt(rgb.R))
+    ig := int(col * math.Sqrt(rgb.G))
+    ib := int(col * math.Sqrt(rgb.B))
 
-  _, err := fmt.Fprintf(f, "%d %d %d\n", ir, ig, ib)
-  check(err, "Error writing to file: %v\n")
+    _, err := fmt.Fprintf(f, "%d %d %d\n", ir, ig, ib)
+    check(err, "Error writing to file: %v\n")
 }
 
 func sample(world *obj.World, camera *obj.Camera, i, j int) obj.Color {
@@ -101,16 +101,20 @@ func render(world *obj.World, camera *obj.Camera) {
 
 func main() {
     //objects in the world
-    camera := obj.NewCamera()
-    world := obj.World{}
+    lookFrom := obj.Vector{-2, 2, 1}
+	  lookAt := obj.Vector{0, 0, -1}
+	  vUp := obj.Vector{0, 1, 0}
 
-    sphere := obj.NewSphere(0, 0, -1, 0.5, obj.Lambertian{obj.Color{0.8, 0.3, 0.3}})
-	  floor := obj.NewSphere(0, -100.5, -1, 100, obj.Lambertian{obj.Color{0.8, 0.8, 0.0}})
-	  metal := obj.NewSphere(1, 0, -1, 0.5, obj.Metal{obj.Color{0.8, 0.6, 0.2}, 0.3})
-	  glass := obj.NewSphere(-1, 0, -1, 0.5, obj.Dielectric{1.5})
-	  bubble := obj.NewSphere(-1, 0, -1, -0.45, obj.Dielectric{1.5})
+	  camera := obj.NewCamera(lookFrom, lookAt, vUp, 90, float64(dimensionsX)/float64(dimensionsY))
 
-	  world.AddAll(&sphere, &floor, &metal, &glass, &bubble)
+	  world := obj.World{}
+
+	  radius := math.Cos(math.Pi / 4)
+
+	  blue := obj.NewSphere(-radius, 0, -1, radius, obj.Lambertian{obj.Color{0, 0, 1}})
+	  red := obj.NewSphere(radius, 0, -1, radius, obj.Lambertian{obj.Color{1, 0, 0}})
+
+	  world.AddAll(&blue, &red)
 
 	  render(&world, &camera)
 }
