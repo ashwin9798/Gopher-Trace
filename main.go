@@ -104,15 +104,13 @@ func main() {
     camera := obj.NewCamera()
     world := obj.World{}
 
-    sphere := obj.Sphere{obj.Vector{0, 0, -1}, 0.5, obj.Lambertian{obj.Color{0.8,0.3,0.3}}}
-    floor  := obj.Sphere{obj.Vector{0, -100.5, -1}, 100, obj.Lambertian{obj.Color{0.8,0.8,0.0}}}
-    left   := obj.Sphere{obj.Vector{1, 0, -1}, 0.5, obj.Metal{obj.Color{0.8, 0.6, 0.2},0.0}}
-    right  := obj.Sphere{obj.Vector{-1, 0, -1}, 0.5, obj.Metal{obj.Color{0.8, 0.8, 0.8},0.4}}
+    sphere := obj.NewSphere(0, 0, -1, 0.5, obj.Lambertian{obj.Color{0.8, 0.3, 0.3}})
+	  floor := obj.NewSphere(0, -100.5, -1, 100, obj.Lambertian{obj.Color{0.8, 0.8, 0.0}})
+	  metal := obj.NewSphere(1, 0, -1, 0.5, obj.Metal{obj.Color{0.8, 0.6, 0.2}, 0.3})
+	  glass := obj.NewSphere(-1, 0, -1, 0.5, obj.Dielectric{1.5})
+	  bubble := obj.NewSphere(-1, 0, -1, -0.45, obj.Dielectric{1.5})
 
-    world.Add(&sphere)
-	  world.Add(&floor)
-	  world.Add(&left)
-	  world.Add(&right)
+	  world.AddAll(&sphere, &floor, &metal, &glass, &bubble)
 
 	  render(&world, &camera)
 }

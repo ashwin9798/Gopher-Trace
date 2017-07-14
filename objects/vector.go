@@ -69,3 +69,21 @@ func (v Vector) Normalize() Vector {
     l := v.Length()
     return Vector{v.X/l, v.Y/l, v.Z/l}
 }
+
+func (v Vector) Refract(n Vector, ni_over_nt float64) (bool, Vector) {
+    unitVec := v.Normalize()
+    dt := unitVec.Dot(n.Normalize())
+    discriminant := 1.0 - ni_over_nt*ni_over_nt*(1-dt*dt)
+    if discriminant > 0 {
+        a := unitVec.Subtract(n.MultiplyScalar(dt)).MultiplyScalar(ni_over_nt)
+        b := n.MultiplyScalar(math.Sqrt(discriminant))
+        return true, a.Subtract(b)
+    }
+    return false, Vector{}
+}
+
+
+func (v Vector) Reflect(n Vector) Vector {
+    product := (v.Dot(n))*2
+    return v.Subtract(n.MultiplyScalar(product))
+}
