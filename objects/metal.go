@@ -1,7 +1,7 @@
 package objects
 
 type Metal struct {
-    C Vector
+    C Color
     Fuzz float64
 }
 
@@ -12,7 +12,7 @@ func (m Metal) Bounce(input Ray, hit Hit)(bool, Ray) {
     return bounced, scatteredRay
 }
 
-func (m Metal) Color() Vector {
+func (m Metal) Color() Color {
     return m.C
 }
 

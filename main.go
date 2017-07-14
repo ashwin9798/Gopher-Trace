@@ -5,8 +5,16 @@ import (
   "os"
   "math"
   "math/rand"
+  "time"
 
   obj "objects"
+)
+
+const (
+	 dimensionsX = 400 // size of x
+	 dimensionsY = 200 // size of y
+	 numSamples = 100 // number of samples for aa
+	 col  = 255.99
 )
 
 func check(e error, s string) {
@@ -16,33 +24,7 @@ func check(e error, s string) {
     }
 }
 
-
-const (
-	 dimensionsX = 400 // size of x
-	 dimensionsY = 200 // size of y
-	 numSamples = 100 // number of samples for aa
-	 col  = 255.99
-)
-
-var (
-	  white = obj.Vector{1.0, 1.0, 1.0}
-	  blue  = obj.Vector{0.5, 0.7, 1.0}
-	  camera = obj.NewCamera()
-	  sphere = obj.Sphere{obj.Vector{0, 0, -1}, 0.5, obj.Lambertian{obj.Vector{0.8,0.3,0.3}}}
-	  floor  = obj.Sphere{obj.Vector{0, -100.5, -1}, 100, obj.Lambertian{obj.Vector{0.8,0.8,0.0}}}
-    left   = obj.Sphere{obj.Vector{1, 0, -1}, 0.5, obj.Metal{obj.Vector{0.8, 0.6, 0.2},0.0}}
- 	  right  = obj.Sphere{obj.Vector{-1, 0, -1}, 0.5, obj.Metal{obj.Vector{0.8, 0.8, 0.8},0.4}}
-    world = obj.World{[]obj.Hitable{&sphere, &floor, &left, &right}}
-)
-
-func gradient(r obj.Ray) obj.Vector {
-    v := r.Direction.Normalize()
-    t := 0.5 * (v.Y + 1.0)
-    // linear blend: blended_value = (1 - t) * white + t * blue
-    return white.MultiplyScalar(1.0 - t).Add(blue.MultiplyScalar(t))
-}
-
-func color(r obj.Ray, world obj.Hitable, depth int) obj.Vector {
+func color(r obj.Ray, world obj.Hitable, depth int) obj.Color {
     hit, record := world.Hit(r, 0.001, math.MaxFloat64)
 
     if hit {
@@ -53,45 +35,84 @@ func color(r obj.Ray, world obj.Hitable, depth int) obj.Vector {
           return record.Material.Color().Multiply(newColor)
         }
       }
-      return obj.Vector{}
+      return obj.Black
     }
-    return gradient(r)
+    return obj.Gradient(obj.White, obj.Blue, r.Direction.Normalize().Y)
 }
 
-func main() {
-
+func createFile() *os.File {
     f, err := os.Create("out.ppm")
-    defer f.Close()
-
     check(err, "Error opening file: %v\n")
 
     _, err = fmt.Fprintf(f, "P3\n%d %d\n255\n", dimensionsX, dimensionsY)
-
     check(err, "Error writting to file: %v\n")
+    return f
+}
 
-    //loop through all the pixels from top left to bottom right
-    //write rgb values for each
-    for j := dimensionsY-1; j>=0; j-- {
-      for i := 0; i<dimensionsX; i++ {
-          rgb := obj.Vector{}
+func writeFile(f *os.File, rgb obj.Color) {
+  ir := int(col * math.Sqrt(rgb.R))
+  ig := int(col * math.Sqrt(rgb.G))
+  ib := int(col * math.Sqrt(rgb.B))
 
-          for s := 0; s < numSamples; s++ {
-              u := (float64(i)+ rand.Float64())/ float64(dimensionsX)
-              v := (float64(j) + rand.Float64())/ float64(dimensionsY)
-              r := camera.RayAt(u,v)
-              color := color(r, &world, 0)
-				      rgb = rgb.Add(color)
-          }
-          // average
-			    rgb = rgb.DivideScalar(float64(numSamples))
-          // get intensity of colors
-          ir := int(col * math.Sqrt(rgb.X))
-          ig := int(col * math.Sqrt(rgb.Y))
-          ib := int(col * math.Sqrt(rgb.Z))
+  _, err := fmt.Fprintf(f, "%d %d %d\n", ir, ig, ib)
+  check(err, "Error writing to file: %v\n")
+}
 
-          _, err = fmt.Fprintf(f, "%d %d %d\n", ir, ig, ib)
-          check(err, "Error writing to file: %v\n")
-      }
+func sample(world *obj.World, camera *obj.Camera, i, j int) obj.Color {
+    rgb := obj.Color{}
+    for s := 0; s < numSamples; s++ {
+        u := (float64(i)+ rand.Float64())/ float64(dimensionsX)
+        v := (float64(j) + rand.Float64())/ float64(dimensionsY)
+        r := camera.RayAt(u,v)
+        color := color(r, world, 0)
+        rgb = rgb.Add(color)
     }
+    // average
+    return rgb.DivideScalar(float64(numSamples))
+}
 
+func render(world *obj.World, camera *obj.Camera) {
+	   ticker := time.NewTicker(time.Millisecond * 100)
+
+	    go func() {
+		      for {
+			         <-ticker.C
+			         fmt.Print(".")
+		      }
+	    }()
+
+	    f := createFile()
+	    defer f.Close()
+
+	    start := time.Now()
+
+      //loop through all the pixels from top left to bottom right
+      //write rgb values for each
+	    for j := dimensionsY - 1; j >= 0; j-- {
+		      for i := 0; i < dimensionsX; i++ {
+			         rgb := sample(world, camera, i, j)
+			         writeFile(f, rgb)
+		      }
+	    }
+	    ticker.Stop()
+	    fmt.Printf("\nDone.\nElapsed: %v\n", time.Since(start))
+}
+
+
+func main() {
+    //objects in the world
+    camera := obj.NewCamera()
+    world := obj.World{}
+
+    sphere := obj.Sphere{obj.Vector{0, 0, -1}, 0.5, obj.Lambertian{obj.Color{0.8,0.3,0.3}}}
+    floor  := obj.Sphere{obj.Vector{0, -100.5, -1}, 100, obj.Lambertian{obj.Color{0.8,0.8,0.0}}}
+    left   := obj.Sphere{obj.Vector{1, 0, -1}, 0.5, obj.Metal{obj.Color{0.8, 0.6, 0.2},0.0}}
+    right  := obj.Sphere{obj.Vector{-1, 0, -1}, 0.5, obj.Metal{obj.Color{0.8, 0.8, 0.8},0.4}}
+
+    world.Add(&sphere)
+	  world.Add(&floor)
+	  world.Add(&left)
+	  world.Add(&right)
+
+	  render(&world, &camera)
 }
