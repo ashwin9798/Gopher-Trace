@@ -24,3 +24,7 @@ The file returned is a .ppm file, which can be viewed using ToyViewer for OS X, 
 
 2. Fuzz property added to metals
 ![alt text](https://raw.githubusercontent.com/ashwin9798/Gopher-Trace/master/images/image2.png)
+
+3. Dielectric/glass sphere
+
+![alt text](https://raw.githubusercontent.com/ashwin9798/Gopher-Trace/master/images/image2.png)
