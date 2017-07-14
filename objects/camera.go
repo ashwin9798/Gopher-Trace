@@ -2,13 +2,15 @@ package objects
 
 import (
     "math"
+    "math/rand"
 )
 
 type Camera struct {
-    lowerLeft, horizontal, vertical, origin Vector
+    lowerLeft, horizontal, vertical, origin, u, v, w Vector
+    lensRadius float64
 }
 
-func NewCamera(lookFrom, lookAt, vUp Vector, vfov, aspect float64) Camera {
+func NewCamera(lookFrom, lookAt, vUp Vector, vfov, aspect, aperture, focusDist float64) Camera {
     c := Camera{}
 
     theta := vfov * math.Pi/180
@@ -18,12 +20,20 @@ func NewCamera(lookFrom, lookAt, vUp Vector, vfov, aspect float64) Camera {
     u := vUp.Cross(w).Normalize()
     v := w.Cross(u)
 
-    c.origin = lookFrom
-    c.lowerLeft =  c.origin.Subtract(u.MultiplyScalar(halfWidth)).Subtract(v.MultiplyScalar(halfHeight)).Subtract(w)
-	  c.horizontal = u.MultiplyScalar(2 * halfWidth)
-	  c.vertical = v.MultiplyScalar(2 * halfHeight)
+    x := u.MultiplyScalar(halfWidth * focusDist)
+	  y := v.MultiplyScalar(halfHeight * focusDist)
 
-	   return c
+    c.lensRadius = aperture
+    c.origin = lookFrom
+    c.lowerLeft =  c.origin.Subtract(x).Subtract(y).Subtract(w.MultiplyScalar(focusDist))
+	  c.horizontal = u.MultiplyScalar(2 * halfWidth * focusDist)
+	  c.vertical = v.MultiplyScalar(2 * halfHeight * focusDist)
+
+    c.w = w
+    c.u = u
+    c.v = v
+
+    return c
 }
 
 func (c *Camera) RayAt(u float64, v float64) Ray {
@@ -32,4 +42,14 @@ func (c *Camera) RayAt(u float64, v float64) Ray {
 
     direction := c.lowerLeft.Add(horizontal).Add(vertical).Subtract(c.origin)
     return Ray{c.origin, direction}
+}
+
+func randomInUnitDisc() Vector {
+	  var p Vector
+	  for {
+		    p = Vector{rand.Float64(), rand.Float64(), 0}.MultiplyScalar(2).Subtract(Vector{1, 1, 0})
+		    if p.Dot(p) < 1.0 {
+			       return p
+		    }
+	  }
 }
