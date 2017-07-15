@@ -98,6 +98,31 @@ func render(world *obj.World, camera *obj.Camera) {
 	    fmt.Printf("\nDone.\nElapsed: %v\n", time.Since(start))
 }
 
+func createRandomWorld() *obj.World {
+    myWorld := &obj.World{}
+    myWorld.Add(obj.NewSphere(0,-1000,0, 1000, obj.Lambertian{obj.Color{0.5, 0.5, 0.5}}))
+    for a := -11; a < 11; a++ {
+        for b := -11; b < 11; b++ {
+            chooseMaterial := rand.Float64()
+            center := obj.Vector{float64(a)+0.9*rand.Float64(), 0.2, float64(b)+0.9*rand.Float64()}
+            if (center.Subtract(obj.Vector{4,0.2,0}).Length()) > 0.9 {
+                if chooseMaterial < 0.8 {
+                    myWorld.Add(obj.NewSphere(center.X, center.Y, center.Z, 0.2, obj.Lambertian{obj.Color{rand.Float64()*rand.Float64(),rand.Float64()*rand.Float64(),rand.Float64()*rand.Float64()}}))
+                } else if chooseMaterial < 0.95 {
+                    myWorld.Add(obj.NewSphere(center.X, center.Y, center.Z, 0.2, obj.Lambertian{obj.Color{0.5*(1+rand.Float64()),0.5*(1+rand.Float64()),0.5*(1+rand.Float64())}}))
+                } else {
+                    myWorld.Add(obj.NewSphere(center.X, center.Y, center.Z, 0.2, obj.Dielectric{1.5}))
+                }
+            }
+        }
+    }
+    glass := obj.NewSphere(0, 1, 0, 1.0, obj.Dielectric{1.5})
+  	lambertian := obj.NewSphere(-4, 1, 0, 1.0, obj.Lambertian{C: obj.Color{R: 0.4, G: 0.0, B: 0.1}})
+	  metal := obj.NewSphere(4, 1, 0, 1.0, obj.Metal{C: obj.Color{R: 0.7, G: 0.6, B: 0.5}, Fuzz: 0.0})
+    myWorld.AddAll(glass, lambertian, metal)
+
+    return myWorld
+}
 
 func main() {
     //objects in the world
@@ -110,15 +135,6 @@ func main() {
 
 	  camera := obj.NewCamera(lookFrom, lookAt, vUp, 20, float64(dimensionsX)/float64(dimensionsY), aperture, focusDist)
 
-	  world := obj.World{}
-
-    sphere := obj.NewSphere(0, 0, -1, 0.5, obj.Lambertian{obj.Color{0.8, 0.3, 0.3}})
- 	  floor := obj.NewSphere(0, -100.5, -1, 100, obj.Lambertian{obj.Color{0.8, 0.8, 0.0}})
- 	  metal := obj.NewSphere(1, 0, -1, 0.5, obj.Metal{obj.Color{0.8, 0.6, 0.2}, 0.3})
- 	  glass := obj.NewSphere(-1, 0, -1, 0.5, obj.Dielectric{1.5})
- 	  bubble := obj.NewSphere(-1, 0, -1, -0.45, obj.Dielectric{1.5})
-
-	  world.AddAll(&sphere, &metal, &floor, &glass, &bubble)
-
-	  render(&world, &camera)
+    world := createRandomWorld()
+	  render(world, &camera)
 }
