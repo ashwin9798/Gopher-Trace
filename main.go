@@ -11,8 +11,8 @@ import (
 )
 
 const (
-	 dimensionsX = 400 // size of x
-	 dimensionsY = 200 // size of y
+	 dimensionsX = 600 // size of x
+	 dimensionsY = 500 // size of y
 	 numSamples = 100 // number of samples for aa
 	 col  = 255.99
 )
@@ -131,9 +131,9 @@ func main() {
 	  vUp := obj.Vector{0, 1, 0}
 
     focusDist := lookFrom.Subtract(lookAt).Length()
-    aperture := 2.0
+    aperture := 0.1
 
-	  camera := obj.NewCamera(lookFrom, lookAt, vUp, 20, float64(dimensionsX)/float64(dimensionsY), aperture, focusDist)
+	  camera := obj.NewCamera(lookFrom, lookAt, vUp, 90, float64(dimensionsX)/float64(dimensionsY), aperture, focusDist)
 
     world := createRandomWorld()
 	  render(world, &camera)

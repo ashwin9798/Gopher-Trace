@@ -29,5 +29,7 @@ The file returned is a .ppm file, which can be viewed using ToyViewer for OS X, 
 ![alt text](https://raw.githubusercontent.com/ashwin9798/Gopher-Trace/master/images/image3.png)
 
 4. New Camera Angle
-
 ![alt text](https://raw.githubusercontent.com/ashwin9798/Gopher-Trace/master/images/image4.png)
+
+5. Random world
+![alt text](https://raw.githubusercontent.com/ashwin9798/Gopher-Trace/master/images/image5.png)
