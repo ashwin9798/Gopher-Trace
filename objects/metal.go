@@ -7,7 +7,7 @@ type Metal struct {
 
 func (m Metal) Bounce(input Ray, hit Hit)(bool, Ray) {
     directionReflected := input.Direction.Reflect(hit.Normal)
-    scatteredRay := Ray{hit.Point, directionReflected.Add(VectorInUnitSphere().MultiplyScalar(m.Fuzz))}
+    scatteredRay := Ray{hit.Point, directionReflected.Add(VectorInUnitSphere().MultiplyScalar(m.Fuzz)), 0}
     bounced := directionReflected.Dot(hit.Normal) > 0
     return bounced, scatteredRay
 }

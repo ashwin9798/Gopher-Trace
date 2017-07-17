@@ -11,32 +11,32 @@ type MovingSphere struct {
     Material
 }
 
-func NewMovingSphere(center0, center1 Vector, t0, t1, radius float64, m Material) *Sphere {
-	return &Sphere{center0, center1, t0, t1, radius, m}
+func NewMovingSphere(center0, center1 Vector, t0, t1, radius float64, m Material) *MovingSphere {
+	return &MovingSphere{center0, center1, t0, t1, radius, m}
 }
 
-func (s *Sphere) Hit(r Ray, tMin float64, tMax float64)(bool, Hit) {
-    oc := r.Origin.Subtract(s.Center)
+func (m *MovingSphere) Hit(r Ray, tMin float64, tMax float64)(bool, Hit) {
+    oc := r.Origin.Subtract(m.Center(r.Time))
     a := r.Direction.Dot(r.Direction)
     b := oc.Dot(r.Direction)
-    c := oc.Dot(oc) - s.Radius*s.Radius
+    c := oc.Dot(oc) - m.Radius*m.Radius
     discriminant := b*b - a*c
 
-    record := Hit{Material: s.Material}
+    record := Hit{Material: m.Material}
 
     if discriminant > 0 {
         temp := (-b - math.Sqrt(discriminant)) / a
         if temp < tMax && temp > tMin {
             record.T = temp
             record.Point = r.Point(temp)
-            record.Normal = (record.Point.Subtract(s.Center)).DivideScalar(s.Radius)
+            record.Normal = (record.Point.Subtract(m.Center(r.Time))).DivideScalar(m.Radius)
             return true, record
         }
         temp = (-b + math.Sqrt(discriminant)) / a  //other root
         if temp < tMax && temp > tMin {
             record.T = temp
             record.Point = r.Point(temp)
-            record.Normal = (record.Point.Subtract(s.Center)).DivideScalar(s.Radius)
+            record.Normal = (record.Point.Subtract(m.Center(r.Time))).DivideScalar(m.Radius)
             return true, record
         }
     }

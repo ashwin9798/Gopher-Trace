@@ -12,7 +12,7 @@ type Camera struct {
     shutterCloseTime float64
 }
 
-func NewCamera(lookFrom, lookAt, vUp Vector, vfov, aspect, aperture, focusDist float64) Camera {
+func NewCamera(lookFrom, lookAt, vUp Vector, vfov, aspect, aperture, focusDist, t0, t1 float64) Camera {
     c := Camera{}
 
     theta := vfov * math.Pi/180
@@ -25,6 +25,8 @@ func NewCamera(lookFrom, lookAt, vUp Vector, vfov, aspect, aperture, focusDist f
     x := u.MultiplyScalar(halfWidth * focusDist)
 	  y := v.MultiplyScalar(halfHeight * focusDist)
 
+    c.shutterOpenTime = t0
+    c.shutterCloseTime = t1
     c.lensRadius = aperture
     c.origin = lookFrom
     c.lowerLeft =  c.origin.Subtract(x).Subtract(y).Subtract(w.MultiplyScalar(focusDist))
@@ -49,7 +51,7 @@ func (c *Camera) RayAt(u float64, v float64) Ray {
     direction := c.lowerLeft.Add(horizontal).Add(vertical).Subtract(c.origin).Subtract(offset)
     time := c.shutterOpenTime + rand.Float64()*(c.shutterCloseTime - c.shutterOpenTime)
 
-    return Ray{c.origin, direction, c.Time}
+    return Ray{origin, direction, time}
 }
 
 func randomInUnitDisc() Vector {

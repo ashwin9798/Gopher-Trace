@@ -107,7 +107,7 @@ func createRandomWorld() *obj.World {
             center := obj.Vector{float64(a)+0.9*rand.Float64(), 0.2, float64(b)+0.9*rand.Float64()}
             if (center.Subtract(obj.Vector{4,0.2,0}).Length()) > 0.9 {
                 if chooseMaterial < 0.8 {
-                    myWorld.Add(obj.NewSphere(center.X, center.Y, center.Z, 0.2, obj.Lambertian{obj.Color{rand.Float64()*rand.Float64(),rand.Float64()*rand.Float64(),rand.Float64()*rand.Float64()}}))
+                    myWorld.Add(obj.NewMovingSphere(center, center.Add(obj.Vector{0,0.5*rand.Float64(),0}), 0.0, 1.0, 0.2, obj.Lambertian{obj.Color{rand.Float64() * rand.Float64(), rand.Float64() * rand.Float64(), rand.Float64() * rand.Float64()}}))
                 } else if chooseMaterial < 0.95 {
                     myWorld.Add(obj.NewSphere(center.X, center.Y, center.Z, 0.2, obj.Lambertian{obj.Color{0.5*(1+rand.Float64()),0.5*(1+rand.Float64()),0.5*(1+rand.Float64())}}))
                 } else {
@@ -118,7 +118,7 @@ func createRandomWorld() *obj.World {
     }
     glass := obj.NewSphere(0, 1, 0, 1.0, obj.Dielectric{1.5})
   	lambertian := obj.NewSphere(-4, 1, 0, 1.0, obj.Lambertian{C: obj.Color{R: 0.4, G: 0.0, B: 0.1}})
-	  metal := obj.NewSphere(4, 1, 0, 1.0, obj.Metal{C: obj.Color{R: 0.7, G: 0.6, B: 0.5}, Fuzz: 0.0})
+	  metal := obj.NewSphere(4, 1, 0, 1.0, obj.Metal{C: obj.Color{R: 0.7, G: 0.6, B: 0.5}, Fuzz: 0.1})
     myWorld.AddAll(glass, lambertian, metal)
 
     return myWorld
@@ -126,14 +126,15 @@ func createRandomWorld() *obj.World {
 
 func main() {
     //objects in the world
-    lookFrom := obj.Vector{3, 3, 2}
-	  lookAt := obj.Vector{0, 0, -1}
+    lookFrom := obj.Vector{13, 2, 3}
+	  lookAt := obj.Vector{0, 0, 0}
 	  vUp := obj.Vector{0, 1, 0}
 
-    focusDist := lookFrom.Subtract(lookAt).Length()
-    aperture := 0.1
+    // focusDist := lookFrom.Subtract(lookAt).Length()
+    focusDist := 10.0
+    aperture := 0.0
 
-	  camera := obj.NewCamera(lookFrom, lookAt, vUp, 90, float64(dimensionsX)/float64(dimensionsY), aperture, focusDist)
+	  camera := obj.NewCamera(lookFrom, lookAt, vUp, 20, float64(dimensionsX)/float64(dimensionsY), aperture, focusDist, 0.0, 1.0)
 
     world := createRandomWorld()
 	  render(world, &camera)

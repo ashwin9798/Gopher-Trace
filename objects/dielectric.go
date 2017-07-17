@@ -39,9 +39,9 @@ func (d Dielectric) Bounce(input Ray, hit Hit) (bool, Ray) {
     }
     if rand.Float64() < reflectProbability {
 		    reflected := input.Direction.Reflect(hit.Normal)
-		    return true, Ray{hit.Point, reflected}
+		    return true, Ray{hit.Point, reflected, 0.0}
 	  }
-    return true, Ray{hit.Point, refracted}
+    return true, Ray{hit.Point, refracted, 0.0}
 }
 
 func (d Dielectric) schlick(cosine float64) float64 {
