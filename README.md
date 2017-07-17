@@ -33,3 +33,6 @@ The file returned is a .ppm file, which can be viewed using ToyViewer for OS X, 
 
 5. Random world
 ![alt text](https://raw.githubusercontent.com/ashwin9798/Gopher-Trace/master/images/image5.png)
+
+6. Motion blur of spheres
+![alt text](https://raw.githubusercontent.com/ashwin9798/Gopher-Trace/master/images/image6.png)
