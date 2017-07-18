@@ -46,3 +46,16 @@ func (m *MovingSphere) Hit(r Ray, tMin float64, tMax float64)(bool, Hit) {
 func (m MovingSphere) Center(time float64) Vector {
     return m.Center0.Add((m.Center1.Subtract(m.Center0)).MultiplyScalar((time - m.time0) / (m.time1 - m.time0)))
 }
+
+func (m *MovingSphere) BoundingBox(t0, t1 float64)(bool, AABB) {
+      box0 := AABB{m.Center(t0) - Vector{m.Radius,m.Radius,m.Radius}, m.Center(t0) + Vector{m.Radius,m.Radius,m.Radius}}
+      box1 := AABB{m.Center(t1) - Vector{m.Radius,m.Radius,m.Radius}, m.Center(t1) + Vector{m.Radius,m.Radius,m.Radius}}
+      box := surroundingBox(box0, box1);
+      return true;
+}
+
+func surroundingBox(box0, box1 AABB) AABB{
+      small := Vector{ffmin(box0.min.X, box1.min.X), ffmin(box0.min.Y, box1.min.Y), ffmin(box0.min.Z, box1.min.Z)}
+      big := Vector{ffmax(box0.max.X, box1.max.X), ffmin(box0.max.Y, box1.max.Y), ffmin(box0.max.Z, box1.max.Z)}
+      return AABB{small,big}
+}
