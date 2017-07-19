@@ -51,7 +51,7 @@ func (m *MovingSphere) BoundingBox(t0, t1 float64)(bool, AABB) {
       box0 := AABB{m.Center(t0) - Vector{m.Radius,m.Radius,m.Radius}, m.Center(t0) + Vector{m.Radius,m.Radius,m.Radius}}
       box1 := AABB{m.Center(t1) - Vector{m.Radius,m.Radius,m.Radius}, m.Center(t1) + Vector{m.Radius,m.Radius,m.Radius}}
       box := surroundingBox(box0, box1);
-      return true;
+      return true, box;
 }
 
 func surroundingBox(box0, box1 AABB) AABB{
