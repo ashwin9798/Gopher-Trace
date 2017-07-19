@@ -28,7 +28,7 @@ func (w *World) BoundingBox(t0, t1 float64)(bool, AABB) {
 
     for i:=1; i < len(w.Elements); i++ {
         true, _ := w.Elements[0].BoundingBox(t0,t1,tempBox))
-        if(true){
+        if true {
           box = surroundingBox(box, tempBox)
         }
         else
