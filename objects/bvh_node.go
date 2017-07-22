@@ -5,6 +5,11 @@ type BVH_Node struct {
     box AABB
 }
 
+func NewBVH_Node() BVH_Node {
+
+}
+
+
 func (b *BVH_Node) Hit(r Ray, tMin float64, tMax float64)(bool, Hit) {
     var rec Hit
     if t, _ := b.box.Hit(r, tMin, tMax); t {
