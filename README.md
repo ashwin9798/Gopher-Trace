@@ -1,5 +1,5 @@
 # GopherTrace
-A ray tracer written in the Go language, adapted from the C++ methodologies in the book "Ray tracing in one weekend"
+A ray tracer written in the Go language, adapted from the C++ methodologies in the book "Ray tracing in one weekend" by Peter Shirley. Check out the book here: https://www.amazon.com/Ray-Tracing-Weekend-Minibooks-Book-ebook/dp/B01B5AODD8.
 
 **What is Ray Tracing?**
 
@@ -16,7 +16,7 @@ cd into the project's root directory and run the following command in your termi
 
 `go run main.go`
 
-The file returned is a .ppm file, which can be viewed using ToyViewer for OS X, or some other software on other systems (haven't looked into it).
+This command will only work if you have Go installed on your system (https://golang.org/dl/). The file returned is a .ppm file, which can be viewed using ToyViewer for OS X, or some other software on other systems. I may add a configuration that returns a png, but haven't gotten there yet.
 
 # Progression of image
 
